@@ -1,0 +1,92 @@
+@extends('layouts.app')
+
+@section('title')
+    {{ __('leave_requests.edit_leave_request') }}
+@endsection
+
+@section('page_css')
+    <link rel="stylesheet" href="{{ asset('assets/css/daterangepicker.css') }}">
+@endsection
+
+@section('content')
+<section class="section">
+    @include('flash::message')
+
+    <div class="section-header">
+        <h1 class="page__heading">{{ __('leave_requests.edit_leave_request') }}</h1>
+        <div class="filter-container section-header-breadcrumb justify-content-end">
+            <a class="btn btn-light ml-1" href="{{ route('leave-requests.index') }}">
+                {{ __('messages.common.back') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="section-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        @include('layouts.errors')
+
+                        {{ Form::model($leaveRequest, [
+                            'route' => ['leave-requests.update', $leaveRequest->id],
+                            'method' => 'put',
+                            'class' => 'leave-request-form',
+                            'enctype' => 'multipart/form-data'
+                        ]) }}
+
+                            @include('leave_requests.fields')
+
+                        {{ Form::close() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endsection
+
+@section('page_js')
+    <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/leave_requests/leave_requests.js') }}"></script>
+@endsection
+
+@section('scripts')
+   <script src="{{ mix('assets/js/leave_requests/leave_requests.js') }}"></script>
+
+<script>
+$(document).ready(function() {
+    function togglePartialFields() {
+        if ($('#partial_leave').is(':checked')) {
+            $('#from_time_div, #to_time_div').removeClass('d-none');
+        } else {
+            $('#from_time_div, #to_time_div').addClass('d-none');
+            $('#from_time, #to_time').val('');
+        }
+        calculateTotalDays();
+    }
+
+    function calculateTotalDays() {
+        let fromDate = $('#from_date').val();
+        let toDate = $('#to_date').val();
+        let totalDays = 0;
+
+        if (fromDate && toDate) {
+            const from = new Date(fromDate);
+            const to = new Date(toDate);
+            totalDays = Math.ceil((to - from) / (1000 * 60 * 60 * 24)) + 1;
+
+            // if ($('#partial_leave').is(':checked')) {
+            //     totalDays = 0.5;
+            // }
+        }
+
+        $('#total_days').val(totalDays);
+    }
+
+    $('#partial_leave').change(togglePartialFields);
+    $('#from_date, #to_date').change(calculateTotalDays);
+});
+</script>
+@endsection
+

@@ -1,0 +1,135 @@
+17-02-2026
+=========================================================================
+ALTER TABLE tags ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=Active, 0=Inactive';
+
+20-02-2026
+=========================================================================
+ALTER TABLE `leave_requests` ADD `swap_date` DATE NULL DEFAULT NULL AFTER `status`;
+
+CREATE TABLE `leave_request_attachments` (
+    `id` bigint(20) UNSIGNED NOT NULL,
+    `leave_request_id` bigint(20) UNSIGNED NOT NULL,
+    `file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `leave_request_attachments`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `leave_request_attachments_leave_request_id_foreign` (`leave_request_id`);
+
+ALTER TABLE `leave_request_attachments`
+    MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `leave_request_attachments`
+    ADD CONSTRAINT `leave_request_attachments_leave_request_id_foreign` FOREIGN KEY (`leave_request_id`) REFERENCES `leave_requests` (`id`) ON DELETE CASCADE;
+
+
+21-02-2026
+============================================================================
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_job_status', 'web', 'Manage Job Status', '<p>Able to access Job Status tab.</p>', '2026-02-21 05:11:21', '2026-02-21 05:11:21');
+
+CREATE TABLE `job_statuses` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL UNIQUE,
+    `description` TEXT NULL,
+    `order` INT NOT NULL DEFAULT 0,
+    `created_by` BIGINT UNSIGNED NULL,
+    `deleted_by` BIGINT UNSIGNED NULL,
+    `created_at` TIMESTAMP NULL,
+    `updated_at` TIMESTAMP NULL,
+    `deleted_at` TIMESTAMP NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+22-02-22026
+=================================================================================
+ALTER TABLE `projects` ADD `job_type` TINYINT NULL DEFAULT 0 AFTER `domain_name`;
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_job_type', 'web', 'Manage Job Type', '<p>Able to access Job Type tab.</p>', '2026-02-21 05:11:21', '2026-02-21 05:11:21');
+
+CREATE TABLE `job_types` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL UNIQUE,
+    `description` TEXT NULL,
+    `order` INT NOT NULL DEFAULT 0,
+    `created_by` BIGINT UNSIGNED NULL,
+    `deleted_by` BIGINT UNSIGNED NULL,
+    `created_at` TIMESTAMP NULL,
+    `updated_at` TIMESTAMP NULL,
+    `deleted_at` TIMESTAMP NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+23-02-2026
+==============================================================================
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_salary', 'web', 'Manage Salary', '<p>Able to access Salary tab.</p>', '2026-02-21 05:11:21', '2026-02-21 05:11:21');
+
+CREATE TABLE `salaries` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `user_id` BIGINT(20) UNSIGNED NOT NULL,
+    `basic_salary` DECIMAL(10,2) DEFAULT NULL,
+    `house_rent` DECIMAL(10,2) DEFAULT NULL,
+    `ta_da` DECIMAL(10,2) DEFAULT NULL,
+    `medical_allowance` DECIMAL(10,2) DEFAULT NULL,
+    `over_time` DECIMAL(10,2) DEFAULT NULL,
+    `leave_penalty` DECIMAL(10,2) DEFAULT NULL,
+    `absent_penalty` DECIMAL(10,2) DEFAULT NULL,
+    `other_penalty` DECIMAL(10,2) DEFAULT NULL,
+    `other_penalty_note` TEXT DEFAULT NULL,
+    `tax` DECIMAL(10,2) DEFAULT NULL,
+    `payable` DECIMAL(10,2) DEFAULT NULL,
+    `paid` DECIMAL(10,2) DEFAULT NULL,
+    `due` DECIMAL(10,2) DEFAULT NULL,
+    `year` INT(4) NOT NULL,
+    `month` INT(2) NOT NULL,
+    `created_by` BIGINT(20) UNSIGNED DEFAULT NULL,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    `created_at` TIMESTAMP NULL DEFAULT NULL,
+    `updated_at` TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE salaries
+ADD COLUMN `status` ENUM('due','paid') NOT NULL DEFAULT 'due';
+
+
+25-02-2026
+=============================================================
+ALTER TABLE `users` 
+ADD COLUMN `bank_name` VARCHAR(255) NULL AFTER `remember_token`,
+ADD COLUMN `account_name` VARCHAR(255) NULL AFTER `bank_name`,
+ADD COLUMN `account_number` VARCHAR(100) NULL AFTER `account_name`,
+ADD COLUMN `branch_name` VARCHAR(255) NULL AFTER `account_number`,
+ADD COLUMN `branch_routing_number` VARCHAR(100) NULL AFTER `branch_name`,
+ADD COLUMN `swift_code` VARCHAR(50) NULL AFTER `branch_routing_number`;
+
+26-02-2026
+===============================================================
+ALTER TABLE salaries 
+ADD COLUMN commission DECIMAL(10,2) DEFAULT NULL AFTER tax,
+ADD COLUMN eid_bonus DECIMAL(10,2) DEFAULT NULL AFTER commission;
+
+28-02-2026
+====================================================================================
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_salary_acknowledgement', 'web', 'Manage Salary Acknowledgement', '<p>Able to access Salary Acknowledgement tab.</p>', '2026-02-27 05:11:21', '2026-02-27 05:11:21');
+
+04-03-2024
+============================================
+
+CREATE TABLE `attendances` (
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `signing_in_date_time` DATETIME NULL,
+    `signing_out_date_time` DATETIME NULL,
+    `status` ENUM('late', 'in_time', 'unknown') NULL DEFAULT 'unknown',
+    `duration` INT NULL COMMENT 'Duration in minutes',
+    `note` TEXT NULL,
+    `deleted_by` BIGINT UNSIGNED NULL,
+    `deleted_at` TIMESTAMP NULL,
+    `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `attendances` 
+ADD COLUMN `office_time` VARCHAR(255) NULL 
+AFTER `note`;
+
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_attendence', 'web', 'Manage Attendence', '<p>Able to access Attendence Page .</p>', '2026-02-27 05:11:21', '2026-02-27 05:11:21');
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `display_name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'manage_user_attendence', 'web', 'Manage User Attendence', '<p>Able to access User Attendence Report Page.</p>', '2026-02-27 05:11:21', '2026-02-27 05:11:21');

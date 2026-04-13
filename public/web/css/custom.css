@@ -1,0 +1,88 @@
+/**
+ *
+ * You can write your CSS code here, DO NOT touch the default JavaScript file
+ * because it will make it harder for you to update.
+ * 
+ */
+
+/* Custom Switch Styles */
+.custom-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.custom-switch .custom-control-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.custom-switch .custom-control-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.custom-switch .custom-control-label:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.custom-switch .custom-control-input:checked + .custom-control-label {
+    background-color: #007bff;
+}
+
+.custom-switch .custom-control-input:checked + .custom-control-label:before {
+    transform: translateX(26px);
+}
+
+/* Switch text styles */
+.custom-switch-text .custom-control-label {
+    padding-left: 0;
+    width: 50px;
+}
+
+.custom-switch-text .switch-text-left,
+.custom-switch-text .switch-text-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-switch-text .switch-text-left {
+    left: 8px;
+}
+
+.custom-switch-text .switch-text-right {
+    right: 8px;
+}
+
+.custom-switch-text .custom-control-input:checked + .custom-control-label .switch-text-left {
+    opacity: 1;
+}
+
+.custom-switch-text .custom-control-input:not(:checked) + .custom-control-label .switch-text-right {
+    opacity: 1;
+}
+
+/*# sourceMappingURL=custom.css.map */
