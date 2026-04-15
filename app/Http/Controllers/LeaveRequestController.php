@@ -430,6 +430,8 @@ class LeaveRequestController extends AppBaseController
     {
         $leaveRequest = LeaveRequest::withTrashed()->findOrFail($leaveRequest);
 
+        // return $leaveRequest;
+
         $isAdmin = auth()->user()->hasRole('Admin');
         if (!$isAdmin && $leaveRequest->user_id !== auth()->id()) {
             Flash::error('You Are Not Authorized To View Other Leave Request');

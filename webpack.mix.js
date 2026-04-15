@@ -246,4 +246,7 @@ mix.js('resources/assets/js/custom.js', 'public/assets/js/custom.js').
         'public/assets/js/job-type/job-type.js').
     js('resources/assets/js/attendance/attendance.js',
         'public/assets/js/attendance/attendance.js').
-    version();
+    js(
+    'resources/assets/js/properties/propertie.js',
+    'public/assets/js/properties/propertie.js'
+).version();

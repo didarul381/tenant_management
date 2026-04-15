@@ -484,6 +484,14 @@
         </a>
     </li>
 @endcan
+@can('manage_properties')
+    <li class="side-menus {{ Route::currentRouteNamed('properties*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('properties.index') }}">
+            <i class="fas fa-building" aria-hidden="true"></i>
+            <span>{{ __('properties.properties') }}</span>
+        </a>
+    </li>
+@endcan
 <!-- @can('archived_users')
 <li class="side-menus {{ Request::is('archived-users*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('archived-users') }}">

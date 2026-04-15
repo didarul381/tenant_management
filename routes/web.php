@@ -22,6 +22,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProjectsInvoiceController;
 use App\Http\Controllers\CommissionRuleController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\LeadStageController;
 use App\Http\Controllers\TimeEntryController;
@@ -350,6 +351,18 @@ Route::middleware('auth', 'validate.user', 'xss', 'user.activated','admin_delete
         Route::get('leave-requests/attachments/{attachment}/download', [LeaveRequestController::class, 'downloadAttachment'])->name('leave-requests.download-attachment');
       
     });
+
+    // Properties
+ Route::middleware('permission:manage_properties')->group(function () {
+     Route::resource('properties', PropertyController::class);
+     
+     // Update property status (e.g., Active, Vacant, Maintenance)
+     Route::patch('properties/{property}/status', [PropertyController::class, 'updateStatus'])->name('properties.update-status');
+     
+     // Property Attachments (Images, Deeds, etc.)
+     Route::delete('properties/attachments/{attachment}', [PropertyController::class, 'deleteAttachment'])->name('properties.delete-attachment');
+     Route::get('properties/attachments/{attachment}/download', [PropertyController::class, 'downloadAttachment'])->name('properties.download-attachment');
+ });
 
     // policy
      Route::middleware('permission:manage_policies')->group(function () {
